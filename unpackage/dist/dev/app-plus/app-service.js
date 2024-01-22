@@ -294,7 +294,7 @@ if (uni.restoreGlobal) {
       },
       // 抽屉状态发生变化触发
       change(e, type) {
-        formatAppLog("log", "at pages/index/index.vue:364", (type === "showLeft" ? "左窗口" : "右窗口") + (e ? "打开" : "关闭"));
+        formatAppLog("log", "at pages/index/index.vue:376", (type === "showLeft" ? "左窗口" : "右窗口") + (e ? "打开" : "关闭"));
         this[type] = e;
       }
     },
@@ -320,61 +320,70 @@ if (uni.restoreGlobal) {
       const blueDeviceList = vue.ref([]);
       const param = vue.ref("");
       const param2 = vue.ref("");
+      const showList = vue.ref(true);
+      const deviceName = vue.ref("");
       function initBlue() {
         uni.openBluetoothAdapter({
           success(res) {
             uni.showToast({
               title: "初始化蓝牙成功"
             });
-            formatAppLog("log", "at pages/index/index.vue:71", "初始化蓝牙成功");
-            formatAppLog("log", "at pages/index/index.vue:72", res);
+            formatAppLog("log", "at pages/index/index.vue:76", "初始化蓝牙成功");
+            formatAppLog("log", "at pages/index/index.vue:77", res);
           },
           fail(err) {
             uni.showToast({
               title: "初始化蓝牙失败",
               icon: "error"
             });
-            formatAppLog("log", "at pages/index/index.vue:79", "初始化蓝牙失败");
-            formatAppLog("error", "at pages/index/index.vue:80", err);
+            formatAppLog("log", "at pages/index/index.vue:84", "初始化蓝牙失败");
+            formatAppLog("error", "at pages/index/index.vue:85", err);
           }
         });
       }
       function discovery() {
         blueDeviceList.value.length = 0;
+        showList.value = true;
         uni.startBluetoothDevicesDiscovery({
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:90", "开始搜索");
+            formatAppLog("log", "at pages/index/index.vue:96", "开始搜索");
             uni.onBluetoothDeviceFound(found);
           },
           fail(err) {
-            formatAppLog("log", "at pages/index/index.vue:95", "搜索失败");
-            formatAppLog("error", "at pages/index/index.vue:96", err);
+            uni.showToast({
+              title: "请先初始化蓝牙",
+              icon: "error"
+            });
+            formatAppLog("log", "at pages/index/index.vue:105", "搜索失败");
+            formatAppLog("error", "at pages/index/index.vue:106", err);
           }
         });
       }
       function found(res) {
-        formatAppLog("log", "at pages/index/index.vue:103", res);
+        formatAppLog("log", "at pages/index/index.vue:113", res);
         if (res.devices[0].name != "") {
           blueDeviceList.value.push(res.devices[0]);
         }
       }
       const deviceId = vue.ref("");
       function connect(data) {
-        formatAppLog("log", "at pages/index/index.vue:114", data);
+        formatAppLog("log", "at pages/index/index.vue:124", data);
         deviceId.value = data.deviceId;
         uni.createBLEConnection({
           deviceId: deviceId.value,
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:121", "连接成功");
-            formatAppLog("log", "at pages/index/index.vue:122", res);
+            formatAppLog("log", "at pages/index/index.vue:131", "连接成功");
+            formatAppLog("log", "at pages/index/index.vue:132", res);
             stopDiscovery();
             uni.showToast({
               title: "连接成功"
             });
+            showList.value = false;
+            deviceName.value = data.name;
           },
           fail(err) {
-            formatAppLog("log", "at pages/index/index.vue:130", "连接失败");
-            formatAppLog("error", "at pages/index/index.vue:131", err);
+            formatAppLog("log", "at pages/index/index.vue:142", "连接失败");
+            formatAppLog("error", "at pages/index/index.vue:143", err);
             uni.showToast({
               title: "连接失败",
               icon: "error"
@@ -385,12 +394,12 @@ if (uni.restoreGlobal) {
       function stopDiscovery() {
         uni.stopBluetoothDevicesDiscovery({
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:144", "停止成功");
-            formatAppLog("log", "at pages/index/index.vue:145", res);
+            formatAppLog("log", "at pages/index/index.vue:156", "停止成功");
+            formatAppLog("log", "at pages/index/index.vue:157", res);
           },
           fail(err) {
-            formatAppLog("log", "at pages/index/index.vue:148", "停止失败");
-            formatAppLog("error", "at pages/index/index.vue:149", err);
+            formatAppLog("log", "at pages/index/index.vue:160", "停止失败");
+            formatAppLog("error", "at pages/index/index.vue:161", err);
           }
         });
       }
@@ -398,13 +407,13 @@ if (uni.restoreGlobal) {
         uni.getBLEDeviceServices({
           deviceId: deviceId.value,
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:160", res);
+            formatAppLog("log", "at pages/index/index.vue:172", res);
             uni.showToast({
               title: "获取服务成功"
             });
           },
           fail(err) {
-            formatAppLog("error", "at pages/index/index.vue:166", err);
+            formatAppLog("error", "at pages/index/index.vue:178", err);
             uni.showToast({
               title: "获取服务失败",
               icon: "error"
@@ -418,15 +427,15 @@ if (uni.restoreGlobal) {
           deviceId: deviceId.value,
           serviceId: serviceId.value,
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:186", res);
+            formatAppLog("log", "at pages/index/index.vue:198", res);
             uni.showToast({
               title: "获取特征值成功"
             });
           },
           fail(err) {
-            formatAppLog("log", "at pages/index/index.vue:192", deviceId.value);
-            formatAppLog("log", "at pages/index/index.vue:193", serviceId.value);
-            formatAppLog("error", "at pages/index/index.vue:194", err);
+            formatAppLog("log", "at pages/index/index.vue:204", deviceId.value);
+            formatAppLog("log", "at pages/index/index.vue:205", serviceId.value);
+            formatAppLog("error", "at pages/index/index.vue:206", err);
             uni.showToast({
               title: "获取特征值失败" + err,
               icon: "error"
@@ -444,14 +453,14 @@ if (uni.restoreGlobal) {
           characteristicId: characteristicId.value,
           // 监听对应的特征值
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:213", res);
+            formatAppLog("log", "at pages/index/index.vue:225", res);
             listenValueChange();
             uni.showToast({
               title: "已开启监听"
             });
           },
           fail(err) {
-            formatAppLog("error", "at pages/index/index.vue:220", err);
+            formatAppLog("error", "at pages/index/index.vue:232", err);
             uni.showToast({
               title: "监听失败",
               icon: "error"
@@ -488,18 +497,18 @@ if (uni.restoreGlobal) {
       const messageHex = vue.ref("");
       function listenValueChange() {
         uni.onBLECharacteristicValueChange((res) => {
-          formatAppLog("log", "at pages/index/index.vue:265", res);
+          formatAppLog("log", "at pages/index/index.vue:277", res);
           let resHex = ab2hex(res.value);
-          formatAppLog("log", "at pages/index/index.vue:267", resHex);
+          formatAppLog("log", "at pages/index/index.vue:279", resHex);
           messageHex.value = resHex;
           let result = hexCharCodeToStr(resHex);
-          formatAppLog("log", "at pages/index/index.vue:270", String(result));
+          formatAppLog("log", "at pages/index/index.vue:282", String(result));
           message.value = String(result);
         });
       }
       function send() {
         let msg = param.value;
-        formatAppLog("log", "at pages/index/index.vue:279", msg);
+        formatAppLog("log", "at pages/index/index.vue:291", msg);
         const buffer = new ArrayBuffer(msg.length);
         const dataView = new DataView(buffer);
         for (var i = 0; i < msg.length; i++) {
@@ -511,13 +520,13 @@ if (uni.restoreGlobal) {
           characteristicId: characteristicId.value,
           value: buffer,
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:294", "writeBLECharacteristicValue success", res.errMsg);
+            formatAppLog("log", "at pages/index/index.vue:306", "writeBLECharacteristicValue success", res.errMsg);
             uni.showToast({
               title: "write发送成功"
             });
           },
           fail(err) {
-            formatAppLog("error", "at pages/index/index.vue:300", err);
+            formatAppLog("error", "at pages/index/index.vue:312", err);
             uni.showToast({
               title: "write发送失败",
               icon: "error"
@@ -531,21 +540,21 @@ if (uni.restoreGlobal) {
           serviceId: serviceId.value,
           characteristicId: characteristicId.value,
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:316", res);
+            formatAppLog("log", "at pages/index/index.vue:328", res);
             uni.showToast({
               title: "read发送成功"
             });
             uni.onBLECharacteristicValueChange((res2) => {
-              formatAppLog("log", "at pages/index/index.vue:322", res2);
+              formatAppLog("log", "at pages/index/index.vue:334", res2);
               let resHex = ab2hex(res2.value);
-              formatAppLog("log", "at pages/index/index.vue:326", resHex);
+              formatAppLog("log", "at pages/index/index.vue:338", resHex);
               let result = hexCharCodeToStr(resHex);
               param2.value = result;
-              formatAppLog("log", "at pages/index/index.vue:331", result);
+              formatAppLog("log", "at pages/index/index.vue:343", result);
             });
           },
           fail(err) {
-            formatAppLog("error", "at pages/index/index.vue:335", err);
+            formatAppLog("error", "at pages/index/index.vue:347", err);
             uni.showToast({
               title: "read发送失败",
               icon: "error"
@@ -587,9 +596,9 @@ if (uni.restoreGlobal) {
                           "scroll-y": "",
                           class: "box"
                         }, [
-                          (vue.openBlock(true), vue.createElementBlock(
+                          showList.value ? (vue.openBlock(true), vue.createElementBlock(
                             vue.Fragment,
-                            null,
+                            { key: 0 },
                             vue.renderList(blueDeviceList.value, (item) => {
                               return vue.openBlock(), vue.createElementBlock("view", {
                                 class: "item",
@@ -617,7 +626,17 @@ if (uni.restoreGlobal) {
                             }),
                             256
                             /* UNKEYED_FRAGMENT */
-                          ))
+                          )) : vue.createCommentVNode("v-if", true),
+                          !showList.value ? (vue.openBlock(), vue.createElementBlock(
+                            "view",
+                            {
+                              key: 1,
+                              class: "msg_txt"
+                            },
+                            " 已连接的设备：" + vue.toDisplayString(deviceName.value),
+                            1
+                            /* TEXT */
+                          )) : vue.createCommentVNode("v-if", true)
                         ]),
                         vue.createElementVNode("button", { onClick: initBlue }, "1 初始化蓝牙"),
                         vue.createElementVNode("button", { onClick: discovery }, "2 搜索附近蓝牙设备"),

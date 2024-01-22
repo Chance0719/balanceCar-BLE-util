@@ -14,7 +14,7 @@
 					        scroll-y
 					        class="box"
 					    >
-					        <view  class="item" v-for="item in blueDeviceList" @click="connect(item)">
+					        <view v-if="showList"  class="item" v-for="item in blueDeviceList" @click="connect(item)">
 					            <view>
 					                <text>id: {{ item.deviceId }}</text>    
 					            </view>
@@ -22,6 +22,9 @@
 					                <text>name: {{ item.name }}</text>    
 					            </view>
 					        </view>
+							<view v-if="!showList" class="msg_txt">
+							    已连接的设备：{{ deviceName }}
+							</view>
 					    </scroll-view>
 					
 					    <button @click="initBlue">1 初始化蓝牙</button>
@@ -60,6 +63,8 @@ import { ref } from 'vue'
 const blueDeviceList = ref([])
 const param = ref('')
 const param2 = ref('')
+const showList = ref(true)
+const deviceName = ref('')
 
 // 【1】初始化蓝牙
 function initBlue() {
@@ -85,6 +90,7 @@ function initBlue() {
 // 【2】开始搜寻附近设备
 function discovery() {
 	blueDeviceList.value.length = 0
+	showList.value = true
     uni.startBluetoothDevicesDiscovery({
         success(res) {
             console.log('开始搜索')
@@ -92,6 +98,10 @@ function discovery() {
             uni.onBluetoothDeviceFound(found)
         },
         fail(err) {
+			uni.showToast({
+			    title: '请先初始化蓝牙',
+				icon: 'error'
+			})
             console.log('搜索失败')
             console.error(err)
         }
@@ -125,6 +135,8 @@ function connect(data) {
             uni.showToast({
                 title: '连接成功'
             })
+			showList.value = false
+			deviceName.value = data.name
         },
         fail(err) {
             console.log('连接失败')
