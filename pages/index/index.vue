@@ -56,7 +56,7 @@
 <script setup>
 import { ref } from 'vue'
 
-// 搜索到的蓝牙设备列表
+//  搜索到的蓝牙设备列表
 const blueDeviceList = ref([])
 const param = ref('')
 const param2 = ref('')
