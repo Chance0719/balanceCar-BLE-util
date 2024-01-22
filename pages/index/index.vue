@@ -65,10 +65,17 @@ const param2 = ref('')
 function initBlue() {
     uni.openBluetoothAdapter({
         success(res) {
+			uni.showToast({
+			    title: '初始化蓝牙成功'
+			})
             console.log('初始化蓝牙成功')
             console.log(res)
         },
         fail(err) {
+			uni.showToast({
+			    title: '初始化蓝牙失败',
+				icon: 'error'
+			})
             console.log('初始化蓝牙失败')
             console.error(err)
         }
@@ -123,7 +130,7 @@ function connect(data) {
             console.log('连接失败')
             console.error(err)
             uni.showToast({
-                title: '连接成功',
+                title: '连接失败',
                 icon: 'error'
             })
         }

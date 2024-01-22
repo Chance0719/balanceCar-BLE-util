@@ -294,7 +294,7 @@ if (uni.restoreGlobal) {
       },
       // 抽屉状态发生变化触发
       change(e, type) {
-        formatAppLog("log", "at pages/index/index.vue:357", (type === "showLeft" ? "左窗口" : "右窗口") + (e ? "打开" : "关闭"));
+        formatAppLog("log", "at pages/index/index.vue:364", (type === "showLeft" ? "左窗口" : "右窗口") + (e ? "打开" : "关闭"));
         this[type] = e;
       }
     },
@@ -323,12 +323,19 @@ if (uni.restoreGlobal) {
       function initBlue() {
         uni.openBluetoothAdapter({
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:68", "初始化蓝牙成功");
-            formatAppLog("log", "at pages/index/index.vue:69", res);
+            uni.showToast({
+              title: "初始化蓝牙成功"
+            });
+            formatAppLog("log", "at pages/index/index.vue:71", "初始化蓝牙成功");
+            formatAppLog("log", "at pages/index/index.vue:72", res);
           },
           fail(err) {
-            formatAppLog("log", "at pages/index/index.vue:72", "初始化蓝牙失败");
-            formatAppLog("error", "at pages/index/index.vue:73", err);
+            uni.showToast({
+              title: "初始化蓝牙失败",
+              icon: "error"
+            });
+            formatAppLog("log", "at pages/index/index.vue:79", "初始化蓝牙失败");
+            formatAppLog("error", "at pages/index/index.vue:80", err);
           }
         });
       }
@@ -336,40 +343,40 @@ if (uni.restoreGlobal) {
         blueDeviceList.value.length = 0;
         uni.startBluetoothDevicesDiscovery({
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:83", "开始搜索");
+            formatAppLog("log", "at pages/index/index.vue:90", "开始搜索");
             uni.onBluetoothDeviceFound(found);
           },
           fail(err) {
-            formatAppLog("log", "at pages/index/index.vue:88", "搜索失败");
-            formatAppLog("error", "at pages/index/index.vue:89", err);
+            formatAppLog("log", "at pages/index/index.vue:95", "搜索失败");
+            formatAppLog("error", "at pages/index/index.vue:96", err);
           }
         });
       }
       function found(res) {
-        formatAppLog("log", "at pages/index/index.vue:96", res);
+        formatAppLog("log", "at pages/index/index.vue:103", res);
         if (res.devices[0].name != "") {
           blueDeviceList.value.push(res.devices[0]);
         }
       }
       const deviceId = vue.ref("");
       function connect(data) {
-        formatAppLog("log", "at pages/index/index.vue:107", data);
+        formatAppLog("log", "at pages/index/index.vue:114", data);
         deviceId.value = data.deviceId;
         uni.createBLEConnection({
           deviceId: deviceId.value,
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:114", "连接成功");
-            formatAppLog("log", "at pages/index/index.vue:115", res);
+            formatAppLog("log", "at pages/index/index.vue:121", "连接成功");
+            formatAppLog("log", "at pages/index/index.vue:122", res);
             stopDiscovery();
             uni.showToast({
               title: "连接成功"
             });
           },
           fail(err) {
-            formatAppLog("log", "at pages/index/index.vue:123", "连接失败");
-            formatAppLog("error", "at pages/index/index.vue:124", err);
+            formatAppLog("log", "at pages/index/index.vue:130", "连接失败");
+            formatAppLog("error", "at pages/index/index.vue:131", err);
             uni.showToast({
-              title: "连接成功",
+              title: "连接失败",
               icon: "error"
             });
           }
@@ -378,12 +385,12 @@ if (uni.restoreGlobal) {
       function stopDiscovery() {
         uni.stopBluetoothDevicesDiscovery({
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:137", "停止成功");
-            formatAppLog("log", "at pages/index/index.vue:138", res);
+            formatAppLog("log", "at pages/index/index.vue:144", "停止成功");
+            formatAppLog("log", "at pages/index/index.vue:145", res);
           },
           fail(err) {
-            formatAppLog("log", "at pages/index/index.vue:141", "停止失败");
-            formatAppLog("error", "at pages/index/index.vue:142", err);
+            formatAppLog("log", "at pages/index/index.vue:148", "停止失败");
+            formatAppLog("error", "at pages/index/index.vue:149", err);
           }
         });
       }
@@ -391,13 +398,13 @@ if (uni.restoreGlobal) {
         uni.getBLEDeviceServices({
           deviceId: deviceId.value,
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:153", res);
+            formatAppLog("log", "at pages/index/index.vue:160", res);
             uni.showToast({
               title: "获取服务成功"
             });
           },
           fail(err) {
-            formatAppLog("error", "at pages/index/index.vue:159", err);
+            formatAppLog("error", "at pages/index/index.vue:166", err);
             uni.showToast({
               title: "获取服务失败",
               icon: "error"
@@ -411,15 +418,15 @@ if (uni.restoreGlobal) {
           deviceId: deviceId.value,
           serviceId: serviceId.value,
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:179", res);
+            formatAppLog("log", "at pages/index/index.vue:186", res);
             uni.showToast({
               title: "获取特征值成功"
             });
           },
           fail(err) {
-            formatAppLog("log", "at pages/index/index.vue:185", deviceId.value);
-            formatAppLog("log", "at pages/index/index.vue:186", serviceId.value);
-            formatAppLog("error", "at pages/index/index.vue:187", err);
+            formatAppLog("log", "at pages/index/index.vue:192", deviceId.value);
+            formatAppLog("log", "at pages/index/index.vue:193", serviceId.value);
+            formatAppLog("error", "at pages/index/index.vue:194", err);
             uni.showToast({
               title: "获取特征值失败" + err,
               icon: "error"
@@ -437,14 +444,14 @@ if (uni.restoreGlobal) {
           characteristicId: characteristicId.value,
           // 监听对应的特征值
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:206", res);
+            formatAppLog("log", "at pages/index/index.vue:213", res);
             listenValueChange();
             uni.showToast({
               title: "已开启监听"
             });
           },
           fail(err) {
-            formatAppLog("error", "at pages/index/index.vue:213", err);
+            formatAppLog("error", "at pages/index/index.vue:220", err);
             uni.showToast({
               title: "监听失败",
               icon: "error"
@@ -481,18 +488,18 @@ if (uni.restoreGlobal) {
       const messageHex = vue.ref("");
       function listenValueChange() {
         uni.onBLECharacteristicValueChange((res) => {
-          formatAppLog("log", "at pages/index/index.vue:258", res);
+          formatAppLog("log", "at pages/index/index.vue:265", res);
           let resHex = ab2hex(res.value);
-          formatAppLog("log", "at pages/index/index.vue:260", resHex);
+          formatAppLog("log", "at pages/index/index.vue:267", resHex);
           messageHex.value = resHex;
           let result = hexCharCodeToStr(resHex);
-          formatAppLog("log", "at pages/index/index.vue:263", String(result));
+          formatAppLog("log", "at pages/index/index.vue:270", String(result));
           message.value = String(result);
         });
       }
       function send() {
         let msg = param.value;
-        formatAppLog("log", "at pages/index/index.vue:272", msg);
+        formatAppLog("log", "at pages/index/index.vue:279", msg);
         const buffer = new ArrayBuffer(msg.length);
         const dataView = new DataView(buffer);
         for (var i = 0; i < msg.length; i++) {
@@ -504,13 +511,13 @@ if (uni.restoreGlobal) {
           characteristicId: characteristicId.value,
           value: buffer,
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:287", "writeBLECharacteristicValue success", res.errMsg);
+            formatAppLog("log", "at pages/index/index.vue:294", "writeBLECharacteristicValue success", res.errMsg);
             uni.showToast({
               title: "write发送成功"
             });
           },
           fail(err) {
-            formatAppLog("error", "at pages/index/index.vue:293", err);
+            formatAppLog("error", "at pages/index/index.vue:300", err);
             uni.showToast({
               title: "write发送失败",
               icon: "error"
@@ -524,21 +531,21 @@ if (uni.restoreGlobal) {
           serviceId: serviceId.value,
           characteristicId: characteristicId.value,
           success(res) {
-            formatAppLog("log", "at pages/index/index.vue:309", res);
+            formatAppLog("log", "at pages/index/index.vue:316", res);
             uni.showToast({
               title: "read发送成功"
             });
             uni.onBLECharacteristicValueChange((res2) => {
-              formatAppLog("log", "at pages/index/index.vue:315", res2);
+              formatAppLog("log", "at pages/index/index.vue:322", res2);
               let resHex = ab2hex(res2.value);
-              formatAppLog("log", "at pages/index/index.vue:319", resHex);
+              formatAppLog("log", "at pages/index/index.vue:326", resHex);
               let result = hexCharCodeToStr(resHex);
               param2.value = result;
-              formatAppLog("log", "at pages/index/index.vue:324", result);
+              formatAppLog("log", "at pages/index/index.vue:331", result);
             });
           },
           fail(err) {
-            formatAppLog("error", "at pages/index/index.vue:328", err);
+            formatAppLog("error", "at pages/index/index.vue:335", err);
             uni.showToast({
               title: "read发送失败",
               icon: "error"
