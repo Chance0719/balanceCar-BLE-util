@@ -5,59 +5,67 @@
 				<button type="primary" @click="showDrawer('showLeft')">
 					<text class="word-btn-white">连接蓝牙</text>
 				</button>
-				<uni-drawer ref="showLeft" mode="left" :width="320" @change="change($event,'showLeft')">
-					<!-- <view class="close">
-						<button @click="closeDrawer('showLeft')"><text class="word-btn-white">关闭Drawer</text></button>
-					</view> -->
-					<view style="background-color: aliceblue;">
-					    <scroll-view
-					        scroll-y
-					        class="box"
-					    >
-					        <view v-if="showList"  class="item" v-for="item in blueDeviceList" @click="connect(item)">
-					            <view>
-					                <text>id: {{ item.deviceId }}</text>    
-					            </view>
-					            <view>
-					                <text>name: {{ item.name }}</text>    
-					            </view>
-					        </view>
-							<view v-if="!showList" class="msg_txt">
-							    已连接的设备：{{ deviceName }}
-							</view>
-					    </scroll-view>
-					
-					    <button @click="initBlue">1 初始化蓝牙</button>
-					
-					    <button @click="discovery">2 搜索附近蓝牙设备</button>
-					
-					    <button @click="getServices">3 获取蓝牙服务</button>
-					
-					    <button @click="getCharacteristics">4 获取特征值</button>
-					
-					    <button @click="notify">5 开启消息监听</button>
-						<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param"/>
-					    <button @click="send">6 发送数据</button>
-						<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param2" disabled=true/>
-					    <button @click="read">7 读取数据</button>
-					
-					    <view class="msg_x">
-					        <view class="msg_txt">
-					            监听到的内容：{{ message }}
-					        </view>
-					        <view class="msg_hex">
-					            监听到的内容（十六进制）：{{ messageHex }}
-					        </view>    
-					    </view>    
-					
-					</view>
-				</uni-drawer>
 			</view>
 		</uni-section>
+		<uni-section title="操控" type="line"> 
+			<view class="wrapper">
+			        <view class="rocker">
+			            <rocker :innerRadius="innerRadius" :outerRadius="outerRadius"></rocker>
+			        </view>
+			</view>
+		</uni-section>
+		<uni-drawer ref="showLeft" mode="left" :width="320" @change="change($event,'showLeft')">
+			<!-- <view class="close">
+				<button @click="closeDrawer('showLeft')"><text class="word-btn-white">关闭Drawer</text></button>
+			</view> -->
+			<view style="background-color: aliceblue;">
+			    <scroll-view
+			        scroll-y
+			        class="box"
+			    >
+			        <view v-if="showList"  class="item" v-for="item in blueDeviceList" @click="connect(item)">
+			            <view>
+			                <text>id: {{ item.deviceId }}</text>    
+			            </view>
+			            <view>
+			                <text>name: {{ item.name }}</text>    
+			            </view>
+			        </view>
+					<view v-if="!showList" class="msg_txt">
+					    已连接的设备：{{ deviceName }}
+					</view>
+			    </scroll-view>
+			
+			    <button @click="initBlue">1 初始化蓝牙</button>
+			
+			    <button @click="discovery">2 搜索附近蓝牙设备</button>
+			
+			    <button @click="getServices">3 获取蓝牙服务</button>
+			
+			    <button @click="getCharacteristics">4 获取特征值</button>
+			
+			    <button @click="notify">5 开启消息监听</button>
+				<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param"/>
+			    <button @click="send">6 发送数据</button>
+				<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param2" disabled=true/>
+			    <button @click="read">7 读取数据</button>
+			
+			    <view class="msg_x">
+			        <view class="msg_txt">
+			            监听到的内容：{{ message }}
+			        </view>
+			        <view class="msg_hex">
+			            监听到的内容（十六进制）：{{ messageHex }}
+			        </view>    
+			    </view>    
+			
+			</view>
+		</uni-drawer>
 	</view>
 </template>
 <script setup>
 import { ref } from 'vue'
+import rocker from "../components/rocker/rocker.vue"
 
 //  搜索到的蓝牙设备列表
 const blueDeviceList = ref([])
@@ -65,6 +73,8 @@ const param = ref('')
 const param2 = ref('')
 const showList = ref(true)
 const deviceName = ref('')
+const innerRadius = ref(60)
+const outerRadius = ref(180)
 
 // 【1】初始化蓝牙
 function initBlue() {
@@ -461,5 +471,22 @@ button {
 .close {
 	padding: 10px;
 }
+.wrapper{
+        position: relative;
+        width: 100%;
+        .rocker, .rocker-nvue{
+            position: relative;
+            background-color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            h3{
+                margin: 20px 0;
+            }
+        }
+    }
 </style>
 
