@@ -8,28 +8,37 @@
 			</view>
 		</uni-section>
 		<uni-section title="PID调试" type="line">
+			<span style="margin-left: 20px;color:darkblue">kp：{{kp}}&nbsp;&nbsp;&nbsp;kp：{{ki}}&nbsp;&nbsp;&nbsp;kd：{{kd}}</span>
 			<uni-row :gutter="20">
 				<uni-col :span="8" :offset="4">
-					<button type="primary">kp+</button>
+					<button @click="sendKp('+')" type="primary">kp+</button>
 				</uni-col>
 				<uni-col :span="8">
-					<button type="primary">kp-</button>
+					<button @click="sendKp('-')" type="primary">kp-</button>
 				</uni-col>
 			</uni-row>
 			<uni-row :gutter="20">
 				<uni-col :span="8" :offset="4">
-					<button type="primary">ki+</button>
+					<button @click="sendKi('+')" type="primary">ki+</button>
 				</uni-col>
 				<uni-col :span="8">
-					<button type="primary">ki-</button>
+					<button @click="sendKi('-')" type="primary">ki-</button>
 				</uni-col>
 			</uni-row>
 			<uni-row :gutter="20">
 				<uni-col :span="8" :offset="4">
-					<button type="primary">kd+</button>
+					<button @click="sendKd('+')" type="primary">kd+</button>
 				</uni-col>
 				<uni-col :span="8">
-					<button type="primary">kd-</button>
+					<button @click="sendKd('-')" type="primary">kd-</button>
+				</uni-col>
+			</uni-row>
+			<uni-row :gutter="20">
+				<uni-col :span="8">
+					<button @click="getPidData()" type="primary">读取缓存</button>
+				</uni-col>
+				<uni-col :span="8">
+					<button @click="resetPidData()" type="primary">重置缓存</button>
 				</uni-col>
 			</uni-row>
 		</uni-section>
@@ -73,7 +82,7 @@
 			
 			    <button @click="notify">5 开启消息监听</button>
 				<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param"/>
-			    <button @click="send">6 发送数据</button>
+			    <button @click="send('')">6 发送数据</button>
 				<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param2" disabled=true/>
 			    <button @click="read">7 读取数据</button>
 			
@@ -93,6 +102,7 @@
 <script setup>
 import { ref } from 'vue'
 import rocker from "../components/rocker/rocker.vue"
+import { onMounted } from 'vue'
 
 //  搜索到的蓝牙设备列表
 const blueDeviceList = ref([])
@@ -102,6 +112,130 @@ const showList = ref(true)
 const deviceName = ref("未连接")
 const innerRadius = ref(60)
 const outerRadius = ref(180)
+const kp = ref(1)
+const ki = ref(1)
+const kd = ref(1)
+
+onMounted(()=>{
+	getPidData()
+})
+
+//调节kp
+function sendKp(res) {
+	if(res === '+') {
+		kp.value += 1
+	} else {
+		kp.value -= 1
+	}
+	if(kp.value <= 0) {
+		kp.value = 0
+	}
+	setStorage({
+		key: 'pid_kp',
+		value: kp.value
+	})
+	//蓝牙发送数据
+	send('kp:' + kp.value)
+}
+
+//调节ki
+function sendKi(res) {
+	if(res === '+') {
+		ki.value += 1
+	} else {
+		ki.value -= 1
+	}
+	if(ki.value <= 0) {
+		ki.value = 0
+	}
+	setStorage({
+		key: 'pid_ki',
+		value: ki.value
+	})
+	//蓝牙发送数据
+	send('ki:' + ki.value)
+}
+
+//调节kd
+function sendKd(res) {
+	if(res === '+') {
+		kd.value += 1
+	} else {
+		kd.value -= 1
+	}
+	if(kd.value <= 0) {
+		kd.value = 0
+	}
+	setStorage({
+		key: 'pid_kd',
+		value: kd.value
+	})
+	//蓝牙发送数据
+	send('kd:' + kd.value)
+}
+
+//存储数据到缓存
+function setStorage(res) {
+	uni.setStorage({
+		key: res.key,
+		data: res.value,
+		success: function () {
+			console.log('success');
+			console.log(res.key + ':' + res.value);
+		}
+	});
+}
+
+//重置缓存
+function resetPidData() {
+	setStorage({
+		key: 'pid_kp',
+		value: 1
+	})
+	setStorage({
+		key: 'pid_ki',
+		value: 1
+	})
+	setStorage({
+		key: 'pid_kd',
+		value: 1
+	})
+	kp.value = 1
+	ki.value = 1
+	kd.value = 1
+}
+
+// 从缓存中读取pid数据
+function getPidData() {
+	console.log('读取数据')
+	try {
+		const value = uni.getStorageSync('pid_kp');
+		if (value) {
+			kp.value = value
+			console.log(value);
+		}
+	} catch (e) {
+		console.log(e);
+	}
+	try {
+		const value = uni.getStorageSync('pid_ki');
+		if (value) {
+			ki.value = value
+			console.log(value);
+		}
+	} catch (e) {
+		console.log(e);
+	}
+	try {
+		const value = uni.getStorageSync('pid_kd');
+		if (value) {
+			kd.value = value
+			console.log(value);
+		}
+	} catch (e) {
+		console.log(e);
+	}
+}
 
 // 【1】初始化蓝牙
 function initBlue() {
@@ -322,9 +456,9 @@ function listenValueChange() {
 }
 
 // 【10】发送数据
-function send() {
+function send(res) {
     // 向蓝牙设备发送一个0x00的16进制数据
-    let msg = param.value
+    let msg = res ? res : param.value
 	console.log(msg)
     const buffer = new ArrayBuffer(msg.length)
     const dataView = new DataView(buffer)
