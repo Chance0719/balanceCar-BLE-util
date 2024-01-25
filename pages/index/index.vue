@@ -46,7 +46,7 @@
 			<span style="margin-left: 20px;">已连接设备：{{deviceName}}</span>
 			<view class="wrapper">
 			        <view class="rocker">
-			            <rocker :innerRadius="innerRadius" :outerRadius="outerRadius"></rocker>
+			            <rocker :innerRadius="innerRadius" :outerRadius="outerRadius" :pSend="send"></rocker>
 			        </view>
 			</view>
 		</uni-section>

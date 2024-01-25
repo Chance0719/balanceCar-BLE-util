@@ -21,6 +21,10 @@
 			outerRadius: {
 				type: Number,
 				default: 200
+			},
+			pSend: {
+			    type: Function,
+			    default: null
 			}
 		},
 		data() {
@@ -36,6 +40,7 @@
 				touchNum : 0,	// 点击次数
 				moveTimer: null,
 				clickTimer: null,
+				isSend: false
 			}
 		},
 		mounted() {
@@ -71,30 +76,47 @@
 				this.top = 0
 				clearTimeout(this.moveTimer)
 				this.moveTimer = null
+				this.pSend(" ")
 			},
 			changeDir(state) {
 				//按顺时针
 				switch(state){
 					case 1:
-					  console.log("上")
+						if(!this.isSend) {
+							this.isSend = true
+							console.log("上")
+							this.pSend("A")
+						}
 					  break;
 					case 2:
 					  console.log("右上")
 					  break;
 					case 3:
-					  console.log("右")
+					  if(!this.isSend) {
+					  	this.isSend = true
+					  	console.log("右")
+					  	this.pSend("R")
+					  }
 					  break;	
 					case 4:
 					  console.log("右下")
 					  break;
 					case 5:
-					  console.log("下")
+					  if(!this.isSend) {
+					  	this.isSend = true
+					  	console.log("下")
+					  	this.pSend("B")
+					  }
 					  break;	  
 					case 6:
 					  console.log("左下")
 					  break;	  
 					case 7:
-					  console.log("左")
+					  if(!this.isSend) {
+					  	this.isSend = true
+					  	console.log("左")
+					  	this.pSend("L")
+					  }
 					  break;	  
 					case 8:
 					  console.log("左上")
@@ -166,6 +188,10 @@
 					}
 					templeft = r / powV * templeft;
 					temptop = r / powV * temptop;
+					this.isSend = true
+				} else {
+					console.log("==========================================")
+					this.isSend = false
 				}
 				this.left = templeft
 				this.top = temptop
