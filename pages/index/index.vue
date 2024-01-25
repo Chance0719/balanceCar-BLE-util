@@ -7,7 +7,34 @@
 				</button>
 			</view>
 		</uni-section>
+		<uni-section title="PID调试" type="line">
+			<uni-row :gutter="20">
+				<uni-col :span="8" :offset="4">
+					<button type="primary">kp+</button>
+				</uni-col>
+				<uni-col :span="8">
+					<button type="primary">kp-</button>
+				</uni-col>
+			</uni-row>
+			<uni-row :gutter="20">
+				<uni-col :span="8" :offset="4">
+					<button type="primary">ki+</button>
+				</uni-col>
+				<uni-col :span="8">
+					<button type="primary">ki-</button>
+				</uni-col>
+			</uni-row>
+			<uni-row :gutter="20">
+				<uni-col :span="8" :offset="4">
+					<button type="primary">kd+</button>
+				</uni-col>
+				<uni-col :span="8">
+					<button type="primary">kd-</button>
+				</uni-col>
+			</uni-row>
+		</uni-section>
 		<uni-section title="操控" type="line"> 
+			<span style="margin-left: 20px;">已连接设备：{{deviceName}}</span>
 			<view class="wrapper">
 			        <view class="rocker">
 			            <rocker :innerRadius="innerRadius" :outerRadius="outerRadius"></rocker>
@@ -72,7 +99,7 @@ const blueDeviceList = ref([])
 const param = ref('')
 const param2 = ref('')
 const showList = ref(true)
-const deviceName = ref('')
+const deviceName = ref("未连接")
 const innerRadius = ref(60)
 const outerRadius = ref(180)
 
