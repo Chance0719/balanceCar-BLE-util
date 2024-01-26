@@ -2,7 +2,7 @@
 	<view>
 		<uni-section title="蓝牙" type="line">
 			<view class="example-body">
-				<button type="primary" @click="showDrawer('showLeft')">
+				<button class="button1" type="primary" @click="showDrawer('showLeft')">
 					<text class="word-btn-white">连接蓝牙</text>
 				</button>
 			</view>
@@ -11,34 +11,34 @@
 			<span style="margin-left: 20px;color:darkblue">kp：{{kp}}&nbsp;&nbsp;&nbsp;kp：{{ki}}&nbsp;&nbsp;&nbsp;kd：{{kd}}</span>
 			<uni-row :gutter="20">
 				<uni-col :span="8" :offset="4">
-					<button @click="sendKp('+')" type="primary">kp+</button>
+					<button class="button1" @longpress="pidLongpress('kp')" @click="sendKp('+')" type="primary">kp+</button>
 				</uni-col>
 				<uni-col :span="8">
-					<button @click="sendKp('-')" type="primary">kp-</button>
+					<button class="button1" @longpress="pidLongpress('kp')" @click="sendKp('-')" type="primary">kp-</button>
 				</uni-col>
 			</uni-row>
 			<uni-row :gutter="20">
 				<uni-col :span="8" :offset="4">
-					<button @click="sendKi('+')" type="primary">ki+</button>
+					<button class="button1" @longpress="pidLongpress('ki')" @click="sendKi('+')" type="primary">ki+</button>
 				</uni-col>
 				<uni-col :span="8">
-					<button @click="sendKi('-')" type="primary">ki-</button>
+					<button class="button1" @longpress="pidLongpress('ki')" @click="sendKi('-')" type="primary">ki-</button>
 				</uni-col>
 			</uni-row>
 			<uni-row :gutter="20">
 				<uni-col :span="8" :offset="4">
-					<button @click="sendKd('+')" type="primary">kd+</button>
+					<button class="button1" @longpress="pidLongpress('kd')" @click="sendKd('+')" type="primary">kd+</button>
 				</uni-col>
 				<uni-col :span="8">
-					<button @click="sendKd('-')" type="primary">kd-</button>
+					<button class="button1" @longpress="pidLongpress('kd')" @click="sendKd('-')" type="primary">kd-</button>
 				</uni-col>
 			</uni-row>
 			<uni-row :gutter="20">
 				<uni-col :span="8">
-					<button @click="getPidData()" type="primary">读取缓存</button>
+					<button class="button1" @click="getPidData()" type="primary">读取缓存</button>
 				</uni-col>
 				<uni-col :span="8">
-					<button @click="resetPidData()" type="primary">重置缓存</button>
+					<button class="button1" @click="resetPidData()" type="primary">重置缓存</button>
 				</uni-col>
 			</uni-row>
 		</uni-section>
@@ -50,7 +50,20 @@
 			        </view>
 			</view>
 		</uni-section>
-		<uni-drawer ref="showLeft" mode="left" :width="320" @change="change($event,'showLeft')">
+		<view>
+			<!-- 普通弹窗 -->
+			<uni-popup ref="popup" background-color="#fff">
+				<uni-section title="设置" type="line">
+					<view>
+						<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" type="number" v-model="accuracyNum"/>
+						<button class="button1" type="primary" @click="changeAccuracy">
+							<text class="word-btn-white">确定</text>
+						</button>
+					</view>
+				</uni-section>
+			</uni-popup>
+		</view>
+		<uni-drawer ref="showLeft" mode="left" :width="320">
 			<!-- <view class="close">
 				<button @click="closeDrawer('showLeft')"><text class="word-btn-white">关闭Drawer</text></button>
 			</view> -->
@@ -72,19 +85,19 @@
 					</view>
 			    </scroll-view>
 			
-			    <button @click="initBlue">1 初始化蓝牙</button>
+			    <button class="button1" @click="initBlue">1 初始化蓝牙</button>
 			
-			    <button @click="discovery">2 搜索附近蓝牙设备</button>
+			    <button class="button1" @click="discovery">2 搜索附近蓝牙设备</button>
 			
-			    <button @click="getServices">3 获取蓝牙服务</button>
+			    <button class="button1" @click="getServices">3 获取蓝牙服务</button>
 			
-			    <button @click="getCharacteristics">4 获取特征值</button>
+			    <button class="button1" @click="getCharacteristics">4 获取特征值</button>
 			
-			    <button @click="notify">5 开启消息监听</button>
+			    <button class="button1" @click="notify">5 开启消息监听</button>
 				<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param"/>
-			    <button @click="send('')">6 发送数据</button>
+			    <button class="button1" @click="send('')">6 发送数据</button>
 				<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param2" disabled=true/>
-			    <button @click="read">7 读取数据</button>
+			    <button class="button1" @click="read">7 读取数据</button>
 			
 			    <view class="msg_x">
 			        <view class="msg_txt">
@@ -115,17 +128,60 @@ const outerRadius = ref(180)
 const kp = ref(1)
 const ki = ref(1)
 const kd = ref(1)
+const popup = ref()
+const accuracyNum = ref()
+const nowSetObj = ref()
+const kpAcr = ref(1)
+const kiAcr = ref(1)
+const kdAcr = ref(1)
 
 onMounted(()=>{
 	getPidData()
 })
 
+//调节跨度修改
+function pidLongpress(res) {
+	nowSetObj.value = res
+	if(res === 'kp') {
+		accuracyNum.value = kpAcr.value
+	}
+	if(res === 'ki') {
+		accuracyNum.value = kiAcr.value
+	}
+	if(res === 'kd') {
+		accuracyNum.value = kdAcr.value
+	}
+	setTimeout(()=>{
+		console.log("=========触发了长按=========")
+		popup.value.open()
+	},100)
+}
+
+//设置调节精度
+function changeAccuracy() {
+	if(nowSetObj.value === 'kp') {
+		kpAcr.value = accuracyNum.value
+		setStorage({key:'kpAcr',value:kpAcr.value})
+	}
+	if(nowSetObj.value === 'ki') {
+		kiAcr.value = accuracyNum.value
+		setStorage({key:'kiAcr',value:kiAcr.value})
+	}
+	if(nowSetObj.value === 'kd') {
+		kdAcr.value = accuracyNum.value
+		setStorage({key:'kdAcr',value:kdAcr.value})
+	}
+	popup.value.close()
+}
+
 //调节kp
 function sendKp(res) {
 	if(res === '+') {
-		kp.value += 1
+		kp.value += Number(kpAcr.value)
+		kp.value = Number(kp.value.toFixed(1))
 	} else {
-		kp.value -= 1
+		kp.value -= Number(kpAcr.value)
+		kp.value = Number(kp.value.toFixed(1))
 	}
 	if(kp.value <= 0) {
 		kp.value = 0
@@ -141,9 +197,11 @@ function sendKp(res) {
 //调节ki
 function sendKi(res) {
 	if(res === '+') {
-		ki.value += 1
+		ki.value += Number(kiAcr.value)
+		ki.value = Number(ki.value.toFixed(1))
 	} else {
-		ki.value -= 1
+		ki.value -= Number(kiAcr.value)
+		ki.value = Number(ki.value.toFixed(1))
 	}
 	if(ki.value <= 0) {
 		ki.value = 0
@@ -159,9 +217,11 @@ function sendKi(res) {
 //调节kd
 function sendKd(res) {
 	if(res === '+') {
-		kd.value += 1
+		kd.value += Number(kdAcr.value)
+		kd.value = Number(kd.value.toFixed(1))
 	} else {
-		kd.value -= 1
+		kd.value -= Number(kdAcr.value)
+		kd.value = Number(kd.value.toFixed(1))
 	}
 	if(kd.value <= 0) {
 		kd.value = 0
@@ -200,9 +260,24 @@ function resetPidData() {
 		key: 'pid_kd',
 		value: 1
 	})
+	setStorage({
+		key: 'kpAcr',
+		value: 1
+	})
+	setStorage({
+		key: 'kiAcr',
+		value: 1
+	})
+	setStorage({
+		key: 'kiAcr',
+		value: 1
+	})
 	kp.value = 1
 	ki.value = 1
 	kd.value = 1
+	kpAcr.value = 1
+	kiAcr.value = 1
+	kdAcr.value = 1
 }
 
 // 从缓存中读取pid数据
@@ -230,6 +305,35 @@ function getPidData() {
 		const value = uni.getStorageSync('pid_kd');
 		if (value) {
 			kd.value = value
+			console.log(value);
+		}
+	} catch (e) {
+		console.log(e);
+	}
+	
+	
+	try {
+		const value = uni.getStorageSync('kpAcr');
+		if (value) {
+			kpAcr.value = value
+			console.log(value);
+		}
+	} catch (e) {
+		console.log(e);
+	}
+	try {
+		const value = uni.getStorageSync('kiAcr');
+		if (value) {
+			kiAcr.value = value
+			console.log(value);
+		}
+	} catch (e) {
+		console.log(e);
+	}
+	try {
+		const value = uni.getStorageSync('kdAcr');
+		if (value) {
+			kdAcr.value = value
 			console.log(value);
 		}
 	} catch (e) {
@@ -528,8 +632,6 @@ function read() {
 	export default {
 		data() {
 			return {
-				showRight: false,
-				showLeft: false
 			}
 		},
 		methods: {
@@ -541,11 +643,6 @@ function read() {
 			// 关闭窗口
 			closeDrawer(e) {
 				this.$refs[e].close()
-			},
-			// 抽屉状态发生变化触发
-			change(e, type) {
-				console.log((type === 'showLeft' ? '左窗口' : '右窗口') + (e ? '打开' : '关闭'));
-				this[type] = e
 			}
 		},
 		onNavigationBarButtonTap(e) {
@@ -580,7 +677,7 @@ function read() {
     padding: 10rpx;
     border-bottom: 1px solid #ccc;
 }
-button {
+.button1 {
     margin-bottom: 20rpx;
     margin-left: 20rpx;
     margin-right: 20rpx;
