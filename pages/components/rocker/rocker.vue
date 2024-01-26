@@ -40,7 +40,8 @@
 				touchNum : 0,	// 点击次数
 				moveTimer: null,
 				clickTimer: null,
-				isSend: false
+				sendParam: '',
+				oldSendParam: ''
 			}
 		},
 		mounted() {
@@ -82,45 +83,37 @@
 				//按顺时针
 				switch(state){
 					case 1:
-						if(!this.isSend) {
-							this.isSend = true
-							console.log("上")
-							this.pSend("A")
-						}
-					  break;
+						console.log("上")
+						this.sendParam = "A"
+						break;
 					case 2:
-					  console.log("右上")
-					  break;
+						console.log("右上")
+						break;
 					case 3:
-					  if(!this.isSend) {
-					  	this.isSend = true
-					  	console.log("右")
-					  	this.pSend("R")
-					  }
-					  break;	
+						console.log("右")
+						this.sendParam = "R"
+						break;	
 					case 4:
-					  console.log("右下")
-					  break;
+						console.log("右下")
+						break;
 					case 5:
-					  if(!this.isSend) {
-					  	this.isSend = true
 					  	console.log("下")
-					  	this.pSend("B")
-					  }
-					  break;	  
+					  	this.sendParam = "B"
+						break;	  
 					case 6:
 					  console.log("左下")
 					  break;	  
 					case 7:
-					  if(!this.isSend) {
-					  	this.isSend = true
 					  	console.log("左")
-					  	this.pSend("L")
-					  }
-					  break;	  
+					  	this.sendParam = "L"
+						break;	  
 					case 8:
 					  console.log("左上")
 					  break;	  						  
+				}
+				if(this.sendParam !== this.oldSendParam) {
+					this.pSend(this.sendParam)
+					this.oldSendParam = this.sendParam
 				}
 			},
 			onTouchmove(e){
@@ -188,10 +181,13 @@
 					}
 					templeft = r / powV * templeft;
 					temptop = r / powV * temptop;
-					this.isSend = true
 				} else {
 					console.log("==========================================")
-					this.isSend = false
+					this.sendParam = " "
+					if(this.sendParam !== this.oldSendParam) {
+						this.pSend(this.sendParam)
+						this.oldSendParam = this.sendParam
+					}
 				}
 				this.left = templeft
 				this.top = temptop
