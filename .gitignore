@@ -1,3 +1,4 @@
 .hbuildderx
 .vite
 unpackage/
+.DS_Store
