@@ -204,8 +204,8 @@
 <style>
 	.movable{
 	 	position: relative;
-		width: var(--outerW);
-		height: var(--outerW);
+		width: 200px;
+		height: 200px;
 	}
 	.movableArea{
 	 	position: relative;
@@ -216,9 +216,9 @@
 		top: -1px;
 		left: -1px;
 		z-index: 100;
-	 	width: var(--outerW);
-	 	height: var(--outerW);
-	 	border-radius: var(--outerW);
+	 	width: 200px;
+	 	height: 200px;
+	 	border-radius: 200px;
 	 	border: 2px solid #cccccc;
 		box-sizing: border-box;
 	}
@@ -227,11 +227,11 @@
 		z-index: 101;
 		top: 0;
 		left: 0;
-		width: var(--innerW);
-		height: var(--innerW);
-		margin-top: var(--margin);
-		margin-left: var(--margin);
-		border-radius: var(--innerW);
+		width: 80px;
+		height: 80px;
+		margin-top: 60px;
+		margin-left: 60px;
+		border-radius: 80px;
 		background-color: #999999;
 	}
 </style>
