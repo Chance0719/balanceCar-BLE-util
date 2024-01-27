@@ -38,7 +38,10 @@
 					<button class="button1" @click="getPidData()" type="primary">读取缓存</button>
 				</uni-col>
 				<uni-col :span="8">
-					<button class="button1" @click="resetPidData()" type="primary">重置缓存</button>
+					<button class="button1" @click="resetPidData()" type="primary">重置参数</button>
+				</uni-col>
+				<uni-col :span="8">
+					<button class="button1" @click="openSendStrChange()" type="primary">摇杆设置</button>
 				</uni-col>
 			</uni-row>
 		</uni-section>
@@ -46,7 +49,7 @@
 			<span style="margin-left: 20px;">已连接设备：{{deviceName}}</span>
 			<view class="wrapper">
 			        <view class="rocker">
-			            <rocker :innerRadius="innerRadius" :outerRadius="outerRadius" :pSend="send"></rocker>
+			            <rocker :front1="front" :back1="back" :left1="left" :right1="right" :pSend="send"></rocker>
 			        </view>
 			</view>
 		</uni-section>
@@ -60,6 +63,31 @@
 							<text class="word-btn-white">确定</text>
 						</button>
 					</view>
+				</uni-section>
+			</uni-popup>
+		</view>
+		<view>
+			<!-- 设置摇杆的弹窗 -->
+			<uni-popup ref="popup2" background-color="#fff" :is-mask-click="false">
+				<uni-section title="设置" type="line" style="margin-left: 10px;margin-right: 20px;">
+					<view style="margin-left: 10px;margin-bottom: 10px;"> 
+						<text style="color: red;">设置摇杆不同方向发送的字符串</text>
+					</view>
+					<uni-forms-item label="前" style="margin-left: 10px;">
+						<uni-easyinput class="drt" v-model="front" placeholder="请输入" />
+					</uni-forms-item>
+					<uni-forms-item label="后" style="margin-left: 10px;">
+						<uni-easyinput class="drt" v-model="back" placeholder="请输入" />
+					</uni-forms-item>
+					<uni-forms-item label="左" style="margin-left: 10px;">
+						<uni-easyinput class="drt" v-model="left" placeholder="请输入" />
+					</uni-forms-item>
+					<uni-forms-item label="右" style="margin-left: 10px;">
+						<uni-easyinput class="drt" v-model="right" placeholder="请输入" />
+					</uni-forms-item>
+					<button class="button1" type="primary" @click="changeDrt">
+						<text class="word-btn-white">确定</text>
+					</button>				
 				</uni-section>
 			</uni-popup>
 		</view>
@@ -129,15 +157,33 @@ const kp = ref(1)
 const ki = ref(1)
 const kd = ref(1)
 const popup = ref()
+const popup2 = ref()
 const accuracyNum = ref()
 const nowSetObj = ref()
 const kpAcr = ref(1)
 const kiAcr = ref(1)
 const kdAcr = ref(1)
+const front = ref('F')
+const back = ref('B')
+const left = ref('L')
+const right = ref('R')
 
 onMounted(()=>{
 	getPidData()
 })
+
+// 打开设置摇杆的窗口
+function openSendStrChange() {
+	popup2.value.open()
+}
+
+function changeDrt() {
+	setStorage({key:'front',value:front.value})
+	setStorage({key:'back',value:back.value})
+	setStorage({key:'left',value:left.value})
+	setStorage({key:'right',value:right.value})
+	popup2.value.close()
+}
 
 //调节跨度修改
 function pidLongpress(res) {
@@ -246,7 +292,7 @@ function setStorage(res) {
 	});
 }
 
-//重置缓存
+//重置参数
 function resetPidData() {
 	setStorage({
 		key: 'pid_kp',
@@ -269,8 +315,24 @@ function resetPidData() {
 		value: 1
 	})
 	setStorage({
-		key: 'kiAcr',
+		key: 'kdAcr',
 		value: 1
+	})
+	setStorage({
+		key: 'front',
+		value: 'F'
+	})
+	setStorage({
+		key: 'back',
+		value: 'B'
+	})
+	setStorage({
+		key: 'left',
+		value: 'L'
+	})
+	setStorage({
+		key: 'right',
+		value: 'R'
 	})
 	kp.value = 1
 	ki.value = 1
@@ -278,6 +340,10 @@ function resetPidData() {
 	kpAcr.value = 1
 	kiAcr.value = 1
 	kdAcr.value = 1
+	front.value = 'F'
+	back.value = 'B'
+	left.value = 'L'
+	right.value = 'R'
 }
 
 // 从缓存中读取pid数据
@@ -334,6 +400,42 @@ function getPidData() {
 		const value = uni.getStorageSync('kdAcr');
 		if (value) {
 			kdAcr.value = value
+			console.log(value);
+		}
+	} catch (e) {
+		console.log(e);
+	}
+	try {
+		const value = uni.getStorageSync('front');
+		if (value) {
+			front.value = value
+			console.log(value);
+		}
+	} catch (e) {
+		console.log(e);
+	}
+	try {
+		const value = uni.getStorageSync('back');
+		if (value) {
+			back.value = value
+			console.log(value);
+		}
+	} catch (e) {
+		console.log(e);
+	}
+	try {
+		const value = uni.getStorageSync('left');
+		if (value) {
+			left.value = value
+			console.log(value);
+		}
+	} catch (e) {
+		console.log(e);
+	}
+	try {
+		const value = uni.getStorageSync('right');
+		if (value) {
+			right.value = value
 			console.log(value);
 		}
 	} catch (e) {
@@ -728,6 +830,9 @@ function read() {
 }
 .close {
 	padding: 10px;
+}
+.drt {
+	margin-right: 20rpx;
 }
 .wrapper{
         position: relative;

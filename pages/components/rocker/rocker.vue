@@ -25,6 +25,14 @@
 			pSend: {
 			    type: Function,
 			    default: null
+			},
+			front1: {
+			},
+			back1: {
+			},
+			left1: {
+			},
+			right1: {
 			}
 		},
 		data() {
@@ -84,28 +92,28 @@
 				switch(state){
 					case 1:
 						console.log("上")
-						this.sendParam = "A"
+						this.sendParam = this.front1
 						break;
 					case 2:
 						console.log("右上")
 						break;
 					case 3:
 						console.log("右")
-						this.sendParam = "R"
+						this.sendParam = this.right1
 						break;	
 					case 4:
 						console.log("右下")
 						break;
 					case 5:
 					  	console.log("下")
-					  	this.sendParam = "B"
+					  	this.sendParam = this.back1
 						break;	  
 					case 6:
 					  console.log("左下")
 					  break;	  
 					case 7:
 					  	console.log("左")
-					  	this.sendParam = "L"
+					  	this.sendParam = this.left1
 						break;	  
 					case 8:
 					  console.log("左上")
@@ -215,7 +223,7 @@
 		position: absolute;
 		top: -1px;
 		left: -1px;
-		z-index: 100;
+		/* z-index: 100; */
 	 	width: 200px;
 	 	height: 200px;
 	 	border-radius: 200px;
@@ -224,7 +232,7 @@
 	}
 	.movableView{
 		position: absolute;
-		z-index: 101;
+		/* z-index: 101; */
 		top: 0;
 		left: 0;
 		width: 80px;
