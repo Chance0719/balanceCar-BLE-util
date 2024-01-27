@@ -58,7 +58,7 @@
 			<uni-popup ref="popup" background-color="#fff">
 				<uni-section title="设置" type="line">
 					<view>
-						<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" type="number" v-model="accuracyNum"/>
+						<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" type="digit" v-model="accuracyNum"/>
 						<button class="button1" type="primary" @click="changeAccuracy">
 							<text class="word-btn-white">确定</text>
 						</button>
