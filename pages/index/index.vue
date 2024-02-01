@@ -100,7 +100,8 @@
 			        scroll-y
 			        class="box"
 			    >
-			        <view v-if="showList"  class="item" v-for="item in blueDeviceList" @click="connect(item)">
+				<view v-if="showList">
+			        <view  class="item" v-for="item in blueDeviceList" @click="connect(item)">
 			            <view>
 			                <text>id: {{ item.deviceId }}</text>    
 			            </view>
@@ -108,6 +109,7 @@
 			                <text>name: {{ item.name }}</text>    
 			            </view>
 			        </view>
+				</view>
 					<view v-if="!showList" class="msg_txt">
 					    已连接的设备：{{ deviceName }}
 					</view>
@@ -466,7 +468,7 @@ function initBlue() {
 
 // 【2】开始搜寻附近设备
 function discovery() {
-	blueDeviceList.value.length = 0
+	blueDeviceList.value.splice(0, blueDeviceList.value.length)
 	showList.value = true
     uni.startBluetoothDevicesDiscovery({
         success(res) {
