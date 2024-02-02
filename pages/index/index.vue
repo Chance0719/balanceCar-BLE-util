@@ -8,7 +8,7 @@
 			</view>
 		</uni-section>
 		<uni-section title="PID调试" type="line">
-			<span style="margin-left: 20px;color:darkblue">kp：{{kp}}&nbsp;&nbsp;&nbsp;kp：{{ki}}&nbsp;&nbsp;&nbsp;kd：{{kd}}</span>
+			<span style="margin-left: 20px;color:darkblue">kp：{{kp}}&nbsp;&nbsp;&nbsp;ki：{{ki}}&nbsp;&nbsp;&nbsp;kd：{{kd}}</span>
 			<uni-row :gutter="20">
 				<uni-col :span="8" :offset="4">
 					<button class="button1" @longpress="pidLongpress('kp')" @click="sendKp('+')" type="primary">kp+</button>
