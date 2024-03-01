@@ -9,6 +9,8 @@
 		</uni-section>
 		<uni-section title="PID调试" type="line">
 			<span style="margin-left: 20px;color:darkblue">kp：{{kp}}&nbsp;&nbsp;&nbsp;ki：{{ki}}&nbsp;&nbsp;&nbsp;kd：{{kd}}</span>
+			<br>
+			<span style="margin-left: 20px;color: green;margin-bottom: 10px;">(长按按钮可更改调节跨度)</span>
 			<uni-row :gutter="20">
 				<uni-col :span="8" :offset="4">
 					<button class="button1" @longpress="pidLongpress('kp')" @click="sendKp('+')" type="primary">kp+</button>
