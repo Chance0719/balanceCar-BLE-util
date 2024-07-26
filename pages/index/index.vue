@@ -1,60 +1,70 @@
 <template>
 	<view>
-		<uni-section title="蓝牙" type="line">
-			<view class="example-body">
-				<button class="button1" type="primary" @click="showDrawer('showLeft')">
-					<text class="word-btn-white">连接蓝牙</text>
-				</button>
-			</view>
-		</uni-section>
-		<uni-section title="PID调试" type="line">
-			<span style="margin-left: 20px;color:darkblue">kp：{{kp}}&nbsp;&nbsp;&nbsp;ki：{{ki}}&nbsp;&nbsp;&nbsp;kd：{{kd}}</span>
-			<br>
-			<span style="margin-left: 20px;color: green;">(长按按钮可更改调节跨度)</span>
-			<uni-row :gutter="20">
-				<uni-col :span="8" :offset="4">
-					<button class="button1" @longpress="pidLongpress('kp')" @click="sendKp('+')" type="primary">kp+</button>
-				</uni-col>
-				<uni-col :span="8">
-					<button class="button1" @longpress="pidLongpress('kp')" @click="sendKp('-')" type="primary">kp-</button>
-				</uni-col>
-			</uni-row>
-			<uni-row :gutter="20">
-				<uni-col :span="8" :offset="4">
-					<button class="button1" @longpress="pidLongpress('ki')" @click="sendKi('+')" type="primary">ki+</button>
-				</uni-col>
-				<uni-col :span="8">
-					<button class="button1" @longpress="pidLongpress('ki')" @click="sendKi('-')" type="primary">ki-</button>
-				</uni-col>
-			</uni-row>
-			<uni-row :gutter="20">
-				<uni-col :span="8" :offset="4">
-					<button class="button1" @longpress="pidLongpress('kd')" @click="sendKd('+')" type="primary">kd+</button>
-				</uni-col>
-				<uni-col :span="8">
-					<button class="button1" @longpress="pidLongpress('kd')" @click="sendKd('-')" type="primary">kd-</button>
-				</uni-col>
-			</uni-row>
-			<uni-row :gutter="20">
-				<uni-col :span="8">
-					<button class="button1" @click="getPidData()" type="primary">读取缓存</button>
-				</uni-col>
-				<uni-col :span="8">
-					<button class="button1" @click="resetPidData()" type="primary">重置参数</button>
-				</uni-col>
-				<uni-col :span="8">
-					<button class="button1" @click="openSendStrChange()" type="primary">摇杆设置</button>
-				</uni-col>
-			</uni-row>
-		</uni-section>
-		<uni-section title="操控" type="line"> 
-			<span style="margin-left: 20px;">已连接设备：{{deviceName}}</span>
-			<view class="wrapper" >
-			        <view class="rocker">
-			            <rocker :front1="front" :back1="back" :left1="left" :right1="right" :pSend="send"></rocker>
-			        </view>
-			</view>
-		</uni-section>
+		<scroll-view
+		    scroll-y="true"
+			style="height: 100vh;"
+		>
+			<uni-section title="蓝牙" type="line">
+				<view class="example-body">
+					<button class="button1" type="primary" @click="showDrawer('showLeft')">
+						<text class="word-btn-white">连接蓝牙</text>
+					</button>
+				</view>
+			</uni-section>
+			<uni-section title="PID调试" type="line">
+				<span style="margin-left: 20px;color:darkblue">kp：{{kp}}&nbsp;&nbsp;&nbsp;ki：{{ki}}&nbsp;&nbsp;&nbsp;kd：{{kd}}</span>
+				<br>
+				<span style="margin-left: 20px;color: green;">(长按按钮可更改调节跨度)</span>
+				<uni-row :gutter="20">
+					<uni-col :span="8" :offset="4">
+						<button class="button1" @longpress="pidLongpress('kp')" @click="sendKp('+')" type="primary">kp+</button>
+					</uni-col>
+					<uni-col :span="8">
+						<button class="button1" @longpress="pidLongpress('kp')" @click="sendKp('-')" type="primary">kp-</button>
+					</uni-col>
+				</uni-row>
+				<uni-row :gutter="20">
+					<uni-col :span="8" :offset="4">
+						<button class="button1" @longpress="pidLongpress('ki')" @click="sendKi('+')" type="primary">ki+</button>
+					</uni-col>
+					<uni-col :span="8">
+						<button class="button1" @longpress="pidLongpress('ki')" @click="sendKi('-')" type="primary">ki-</button>
+					</uni-col>
+				</uni-row>
+				<uni-row :gutter="20">
+					<uni-col :span="8" :offset="4">
+						<button class="button1" @longpress="pidLongpress('kd')" @click="sendKd('+')" type="primary">kd+</button>
+					</uni-col>
+					<uni-col :span="8">
+						<button class="button1" @longpress="pidLongpress('kd')" @click="sendKd('-')" type="primary">kd-</button>
+					</uni-col>
+				</uni-row>
+				<uni-row :gutter="20">
+					<uni-col :span="8">
+						<button class="button1" @click="getPidData()" type="primary">读取缓存</button>
+					</uni-col>
+					<uni-col :span="8">
+						<button class="button1" @click="resetPidData()" type="primary">重置参数</button>
+					</uni-col>
+					<uni-col :span="8">
+						<button class="button1" @click="openSendStrChange()" type="primary">摇杆设置</button>
+					</uni-col>
+				</uni-row>
+			</uni-section>
+			<uni-section title="操控" type="line"> 
+				<span style="margin-left: 20px;">已连接设备：{{deviceName}}</span>
+				<scroll-view scroll-y="true" scroll-x="true">
+					<view class="wrapper">
+							<view class="rocker">
+								<rocker :front1="front" :back1="back" :left1="left" :right1="right" :pSend="send"></rocker>
+							</view>
+					</view>
+				</scroll-view>
+			</uni-section>
+		</scroll-view>
+		
+		
+		
 		<view>
 			<!-- 普通弹窗 -->
 			<uni-popup ref="popup" background-color="#fff">
@@ -97,50 +107,57 @@
 			<!-- <view class="close">
 				<button @click="closeDrawer('showLeft')"><text class="word-btn-white">关闭Drawer</text></button>
 			</view> -->
-			<view style="background-color: aliceblue;">
-			    <scroll-view
-			        scroll-y
-			        class="box"
-			    >
-				<view v-if="showList">
-			        <view  class="item" v-for="item in blueDeviceList" @click="connect(item)">
-			            <view>
-			                <text>id: {{ item.deviceId }}</text>    
-			            </view>
-			            <view>
-			                <text>name: {{ item.name }}</text>    
-			            </view>
-			        </view>
-				</view>
-					<view v-if="!showList" class="msg_txt">
-					    已连接的设备：{{ deviceName }}
+			<scroll-view
+			    scroll-y
+			    style="height: 100%;"
+			>
+				<view style="background-color: aliceblue;">
+				    <scroll-view
+				        scroll-y
+				        class="box"
+				    >
+					<view v-if="showList">
+				        <view  class="item" v-for="item in blueDeviceList" @click="connect(item)">
+				            <view>
+				                <text>id: {{ item.deviceId }}</text>    
+				            </view>
+				            <view>
+				                <text>name: {{ item.name }}</text>    
+				            </view>
+				        </view>
 					</view>
-			    </scroll-view>
-			
-			    <button class="button1" @click="initBlue">1 初始化蓝牙</button>
-			
-			    <button class="button1" @click="discovery">2 搜索附近蓝牙设备</button>
-			
-			    <button class="button1" @click="getServices">3 获取蓝牙服务</button>
-			
-			    <button class="button1" @click="getCharacteristics">4 获取特征值</button>
-			
-			    <button class="button1" @click="notify">5 开启消息监听</button>
-				<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param"/>
-			    <button class="button1" @click="send('')">6 发送数据</button>
-				<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param2" disabled=true/>
-			    <button class="button1" @click="read">7 读取数据</button>
-			
-			    <view class="msg_x">
-			        <view class="msg_txt">
-			            监听到的内容：{{ message }}
-			        </view>
-			        <view class="msg_hex">
-			            监听到的内容（十六进制）：{{ messageHex }}
-			        </view>    
-			    </view>    
-			
-			</view>
+						<view v-if="!showList" class="msg_txt">
+						    已连接的设备：{{ deviceName }}
+						</view>
+				    </scroll-view>
+				
+				    <button class="button1" @click="initBlue">1 初始化蓝牙</button>
+				
+				    <button class="button1" @click="discovery">2 搜索附近蓝牙设备</button>
+				
+				    <button class="button1" @click="getServices">3 获取蓝牙服务</button>
+				
+				    <button class="button1" @click="getCharacteristics">4 获取特征值</button>
+				
+				    <button class="button1" @click="notify">5 开启消息监听</button>
+					<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param"/>
+				    <button class="button1" @click="send('')">6 发送数据</button>
+					<input style="border: 2px solid dodgerblue; margin: 20rpx;border-radius:6px;" v-model="param2" disabled=true/>
+				    <button class="button1" @click="read">7 读取数据</button>
+				
+				    <view class="msg_x">
+				        <view class="msg_txt">
+				            监听到的内容：{{ message }}
+				        </view>
+				        <view class="msg_hex">
+				            监听到的内容（十六进制）：{{ messageHex }}
+				        </view>    
+				    </view> 
+					<view class="msg_x2">    
+					</view> 
+				
+				</view>
+			</scroll-view>
 		</uni-drawer>
 	
 		<view>
@@ -825,6 +842,9 @@ function read() {
     box-sizing: border-box;
     padding: 20rpx;
 	border-radius:6px;
+}
+.msg_x2 {
+   padding: 1rpx;
 }
 
 .msg_x .msg_txt {

@@ -2,7 +2,8 @@
 	"pages": [{
 		"path": "pages/index/index",
 		"style": {
-			"navigationBarTitleText": "平衡车遥控"
+			"navigationBarTitleText": "平衡车遥控",
+			"disableScroll": true
 		}
 	}],
 	"globalStyle": {
