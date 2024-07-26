@@ -49,7 +49,7 @@
 		</uni-section>
 		<uni-section title="操控" type="line"> 
 			<span style="margin-left: 20px;">已连接设备：{{deviceName}}</span>
-			<view class="wrapper">
+			<view class="wrapper" >
 			        <view class="rocker">
 			            <rocker :front1="front" :back1="back" :left1="left" :right1="right" :pSend="send"></rocker>
 			        </view>
@@ -142,6 +142,24 @@
 			
 			</view>
 		</uni-drawer>
+	
+		<view>
+			<!-- 提示弹窗 -->
+			<uni-popup ref="tip" background-color="#fff" borderRadius="10px 10px 10px 10px">
+				<uni-section title="提醒" type="line">
+					<view style="width: 80vw;">
+						<view style="margin-left: 10px;margin-bottom: 10px;">
+							<span>  本程序仅支持本人开发的平衡小车，如有任何需要可联系chance0719@163.com咨询。</span>
+						</view>
+						<view>
+							<button class="buttonTip" @click="closeTip()">
+								<text class="word-btn-white">确定</text>
+							</button>
+						</view>
+					</view>
+				</uni-section>
+			</uni-popup>
+		</view>
 	</view>
 </template>
 <script setup>
@@ -162,6 +180,7 @@ const ki = ref(1)
 const kd = ref(1)
 const popup = ref()
 const popup2 = ref()
+const tip = ref()
 const accuracyNum = ref()
 const nowSetObj = ref()
 const kpAcr = ref(1)
@@ -174,7 +193,12 @@ const right = ref('R')
 
 onMounted(()=>{
 	getPidData()
+	tip.value.open()
 })
+
+function closeTip() {
+	tip.value.close()
+}
 
 // 打开设置摇杆的窗口
 function openSendStrChange() {
@@ -784,6 +808,11 @@ function read() {
     border-bottom: 1px solid #ccc;
 }
 .button1 {
+    margin-bottom: 20rpx;
+    margin-left: 20rpx;
+    margin-right: 20rpx;
+}
+.buttonTip {
     margin-bottom: 20rpx;
     margin-left: 20rpx;
     margin-right: 20rpx;

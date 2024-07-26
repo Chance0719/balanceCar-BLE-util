@@ -2,7 +2,7 @@
 	"pages": [{
 		"path": "pages/index/index",
 		"style": {
-			"navigationBarTitleText": "balanceCar-BLE-util"
+			"navigationBarTitleText": "平衡车遥控"
 		}
 	}],
 	"globalStyle": {
